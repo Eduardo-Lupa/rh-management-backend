@@ -43,6 +43,10 @@ $ npm run start:dev
 
 # production mode
 $ npm run start:prod
+
+# em caso de uso com o docker compose e atualizar o node_modules, executar os comandos abaixo ou rodar o docker_up.sh
+$ docker-compose down
+$ docker-compose up --build
 ```
 
 ## Run tests
