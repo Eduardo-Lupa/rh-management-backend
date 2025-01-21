@@ -1,22 +1,13 @@
-import { IsEmail, IsNotEmpty, IsPhoneNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsPhoneNumber, IsString } from 'class-validator';
+import { AuthSignInDto } from 'src/auth/auth.dto';
 
-export class CreateUserInputDTO {
+export class CreateUserInputDTO extends AuthSignInDto {
   id: number;
 
   @IsString()
   @IsNotEmpty()
   name: string;
 
-  @IsEmail({}, { message: 'Invalid email' })
-  @IsNotEmpty()
-  email: string;
-
-  @IsString()
-  @IsNotEmpty()
-  password: string;
-
-  @IsString()
-  @IsNotEmpty()
   type: UserType;
 
   @IsPhoneNumber(null, { message: 'Invalid phone number' })

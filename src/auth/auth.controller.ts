@@ -8,6 +8,6 @@ export class AuthController {
 
   @Post('/login')
   signIn(@Body() body: AuthSignInDto) {
-    return this.authService.signIn(body.username, body.password);
+    return this.authService.signIn(body.email, body.password);
   }
 }

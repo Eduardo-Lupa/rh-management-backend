@@ -61,6 +61,7 @@ export class UserService {
   }
 
   async findUserByEmail(email: string) {
+    // email is unique
     return await this.prisma.user.findFirst({
       where: {
         email: email,

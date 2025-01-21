@@ -1,11 +1,17 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsStrongPassword } from 'class-validator';
 
 export class AuthSignInDto {
-  @IsString()
+  @IsEmail({}, { message: 'Invalid email' })
   @IsNotEmpty()
-  username: string;
+  email: string;
 
-  @IsString()
+  @IsStrongPassword({
+    minLength: 8,
+    minLowercase: 1,
+    minUppercase: 1,
+    minNumbers: 1,
+    minSymbols: 1,
+  })
   @IsNotEmpty()
   password: string;
 }
