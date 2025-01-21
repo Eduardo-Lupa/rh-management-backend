@@ -1,14 +1,15 @@
 import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserInputDTO } from './dtos/updateUserInput.dto';
-import { Prisma, User } from '@prisma/client';
+import { User } from '@prisma/client';
+import { CreateUserInputDTO } from './dtos/createUserInput.dto';
 
 @Controller('/user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
-  findMany(@Body() body: Prisma.UserCreateInput) {
+  findMany(@Body() body: UpdateUserInputDTO) {
     return this.userService.findMany(body);
   }
 
@@ -18,14 +19,12 @@ export class UserController {
   }
 
   @Post('/hunter')
-  createHunterUser(@Body() body: Prisma.UserCreateInput): Promise<User | null> {
+  createHunterUser(@Body() body: CreateUserInputDTO): Promise<User | null> {
     return this.userService.createHunterUser(body);
   }
 
   @Post('/company')
-  createCompanyUser(
-    @Body() body: Prisma.UserCreateInput,
-  ): Promise<User | null> {
+  createCompanyUser(@Body() body: CreateUserInputDTO): Promise<User | null> {
     return this.userService.createCompanyUser(body);
   }
 

@@ -1,15 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Prisma } from '@prisma/client';
+import { UpdateUserInputDTO } from './dtos/updateUserInput.dto';
+
 // import { User, Prisma } from '@prisma/client';
 
 @Injectable()
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findMany(where: Prisma.UserCreateInput) {
+  async findMany(where: UpdateUserInputDTO) {
     return this.prisma.user.findMany({
-      where,
+      where: {
+        id: where?.id,
+        cell_phone: where?.cell_phone,
+        email: where?.email,
+        name: where?.name,
+        type: where?.type,
+      },
     });
   }
 
@@ -17,6 +25,7 @@ export class UserService {
     return this.prisma.user.create({
       data: {
         ...body,
+        password: body.password,
         type: 'hunter',
       },
     });
@@ -31,7 +40,7 @@ export class UserService {
     });
   }
 
-  async findUserbyUsername(name: string) {
+  async findUserbyName(name: string) {
     return this.prisma.user.findMany({
       where: {
         name: name,

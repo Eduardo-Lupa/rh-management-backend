@@ -17,9 +17,11 @@ export class CreateUserInputDTO {
 
   @IsString()
   @IsNotEmpty()
-  type: string;
+  type: UserType;
 
   @IsString()
   @IsNotEmpty()
   cell_phone: string;
 }
+
+export type UserType = 'empresa' | 'hunter';
