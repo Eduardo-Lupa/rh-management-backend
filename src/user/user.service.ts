@@ -2,15 +2,26 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Prisma } from '@prisma/client';
 import { UpdateUserInputDTO } from './dtos/updateUserInput.dto';
-
+import * as bcrypt from 'bcrypt';
+import { ConfigService } from '@nestjs/config';
 // import { User, Prisma } from '@prisma/client';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly configService: ConfigService,
+  ) {}
+
+  hashPassword = async (password: string) => {
+    const saltRounds = +this.configService.get<string>('BCRYPT_SALT');
+    const salt = await bcrypt.genSalt(saltRounds);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    return hashedPassword;
+  };
 
   async findMany(where: UpdateUserInputDTO) {
-    return this.prisma.user.findMany({
+    return await this.prisma.user.findMany({
       where: {
         id: where?.id,
         cell_phone: where?.cell_phone,
@@ -22,26 +33,27 @@ export class UserService {
   }
 
   async createHunterUser(body: Prisma.UserCreateInput) {
-    return this.prisma.user.create({
+    return await this.prisma.user.create({
       data: {
         ...body,
-        password: body.password,
+        password: await this.hashPassword(body.password),
         type: 'hunter',
       },
     });
   }
 
   async createCompanyUser(body: Prisma.UserCreateInput) {
-    return this.prisma.user.create({
+    return await this.prisma.user.create({
       data: {
         ...body,
+        password: await this.hashPassword(body.password),
         type: 'empresa',
       },
     });
   }
 
   async findUserbyName(name: string) {
-    return this.prisma.user.findMany({
+    return await this.prisma.user.findMany({
       where: {
         name: name,
       },
@@ -49,7 +61,7 @@ export class UserService {
   }
 
   async findUserByEmail(email: string) {
-    return this.prisma.user.findFirst({
+    return await this.prisma.user.findFirst({
       where: {
         email: email,
       },
@@ -57,7 +69,7 @@ export class UserService {
   }
 
   async findUserById(id: number) {
-    return this.prisma.user.findFirst({
+    return await this.prisma.user.findFirst({
       where: {
         id: Number(id),
       },
