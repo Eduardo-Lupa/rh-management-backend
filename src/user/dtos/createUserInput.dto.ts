@@ -1,17 +1,25 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateUserInputDTO {
   id: number;
 
   @IsString()
   @IsNotEmpty()
-  username: string;
+  name: string;
+
+  @IsString()
+  @IsNotEmpty()
+  email: string;
 
   @IsString()
   @IsNotEmpty()
   password: string;
 
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
-  partnership: number;
+  type: string;
+
+  @IsString()
+  @IsNotEmpty()
+  cell_phone: string;
 }

@@ -17,13 +17,13 @@ export class AuthService {
     );
   }
 
-  signIn(username: string, password: string) {
-    const user = this.userService.findUserbyUsername(username);
+  async signIn(email: string, password: string) {
+    const user = await this.userService.findUserByEmail(email);
 
     if (!user || user?.password !== password) {
       throw new UnauthorizedException();
     }
-    const payload = { username: user.username, sub: user.id };
+    const payload = { username: user.name, sub: user.id };
 
     const token = this.jwtService.sign(payload);
 
