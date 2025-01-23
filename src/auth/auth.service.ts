@@ -28,6 +28,14 @@ export class AuthService {
 
     const token = this.jwtService.sign(payload);
 
-    return { token, expiresIn: this.jwtExpirationTimeInSeconds };
+    return {
+      token,
+      expiresIn: this.jwtExpirationTimeInSeconds,
+      type: user.type,
+    };
+  }
+
+  async userType(req: any) {
+    return req.user.type;
   }
 }

@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "UserType" AS ENUM ('empresa', 'hunter');
+CREATE TYPE "UserType" AS ENUM ('company', 'hunter');
 
 -- CreateEnum
 CREATE TYPE "Status" AS ENUM ('ativo', 'inativo');

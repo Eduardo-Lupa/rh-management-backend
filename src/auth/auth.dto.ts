@@ -1,6 +1,6 @@
 import { IsEmail, IsNotEmpty, IsStrongPassword } from 'class-validator';
 
-export class AuthSignInDto {
+export class AuthSignInDTO {
   @IsEmail({}, { message: 'Invalid email' })
   @IsNotEmpty()
   email: string;

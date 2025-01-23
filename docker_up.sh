@@ -5,3 +5,5 @@ docker-compose down --rmi all
 
 # Executa o docker-compose com as opções de rebuild
 docker-compose up --build
+
+npm i

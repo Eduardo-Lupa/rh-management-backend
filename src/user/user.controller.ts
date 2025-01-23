@@ -1,13 +1,26 @@
-import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserInputDTO } from './dtos/updateUserInput.dto';
-import { User } from '@prisma/client';
+import { User, UserType } from '@prisma/client';
 import { CreateUserInputDTO } from './dtos/createUserInput.dto';
+import { AuthGuard } from 'src/auth/auth.guard';
+import { RolesGuard } from 'src/auth/roles/roles.guard';
+import { Roles } from 'src/decorators/roles.decorator';
 
 @Controller('/user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @UseGuards(AuthGuard)
   @Get()
   findMany(@Body() body: UpdateUserInputDTO) {
     return this.userService.findMany(body);
@@ -18,16 +31,22 @@ export class UserController {
     return this.userService.findUserById(id);
   }
 
+  // @Roles(UserType.admin)
+  // @UseGuards(AuthGuard, RolesGuard)
   @Post('/hunter')
   createHunterUser(@Body() body: CreateUserInputDTO): Promise<User | null> {
     return this.userService.createHunterUser(body);
   }
 
+  // @Roles(UserType.admin)
+  // @UseGuards(AuthGuard, RolesGuard)
   @Post('/company')
   createCompanyUser(@Body() body: CreateUserInputDTO): Promise<User | null> {
     return this.userService.createCompanyUser(body);
   }
 
+  @Roles(UserType.hunter)
+  @UseGuards(AuthGuard, RolesGuard)
   @Put()
   updateUser(@Body() body: UpdateUserInputDTO, @Query() query: any): string {
     console.log('query: ', query);

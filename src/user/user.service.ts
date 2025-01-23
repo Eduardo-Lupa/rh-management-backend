@@ -4,7 +4,6 @@ import { Prisma } from '@prisma/client';
 import { UpdateUserInputDTO } from './dtos/updateUserInput.dto';
 import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
-// import { User, Prisma } from '@prisma/client';
 
 @Injectable()
 export class UserService {
@@ -47,7 +46,7 @@ export class UserService {
       data: {
         ...body,
         password: await this.hashPassword(body.password),
-        type: 'empresa',
+        type: 'company',
       },
     });
   }

@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsPhoneNumber, IsString } from 'class-validator';
-import { AuthSignInDto } from 'src/auth/auth.dto';
+import { AuthSignInDTO } from 'src/auth/auth.dto';
 
-export class CreateUserInputDTO extends AuthSignInDto {
+export class CreateUserInputDTO extends AuthSignInDTO {
   id: number;
 
   @IsString()
@@ -15,4 +15,4 @@ export class CreateUserInputDTO extends AuthSignInDto {
   cell_phone: string;
 }
 
-export type UserType = 'empresa' | 'hunter';
+export type UserType = 'company' | 'hunter' | 'admin';
