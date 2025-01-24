@@ -11,7 +11,10 @@ import {
 import { UserService } from './user.service';
 import { UpdateUserInputDTO } from './dtos/updateUserInput.dto';
 import { User, UserType } from '@prisma/client';
-import { CreateUserInputDTO } from './dtos/createUserInput.dto';
+import {
+  CreateUserCompanyDTO,
+  CreateUserHunterDTO,
+} from './dtos/createUserInput.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { RolesGuard } from 'src/auth/roles/roles.guard';
 import { Roles } from 'src/decorators/roles.decorator';
@@ -20,13 +23,13 @@ import { Roles } from 'src/decorators/roles.decorator';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard) // TODO apenas admin pode acessar
   @Get()
   findMany(@Body() body: UpdateUserInputDTO) {
     return this.userService.findMany(body);
   }
 
-  @Get('/:id')
+  @Get('/:id') // TODO apenas admin pode acessar
   findUserById(@Param('id') id: number): Promise<User | null> {
     return this.userService.findUserById(id);
   }
@@ -34,14 +37,14 @@ export class UserController {
   // @Roles(UserType.admin)
   // @UseGuards(AuthGuard, RolesGuard)
   @Post('/hunter')
-  createHunterUser(@Body() body: CreateUserInputDTO): Promise<User | null> {
+  createHunterUser(@Body() body: CreateUserHunterDTO): Promise<User | null> {
     return this.userService.createHunterUser(body);
   }
 
   // @Roles(UserType.admin)
   // @UseGuards(AuthGuard, RolesGuard)
   @Post('/company')
-  createCompanyUser(@Body() body: CreateUserInputDTO): Promise<User | null> {
+  createCompanyUser(@Body() body: CreateUserCompanyDTO): Promise<User | null> {
     return this.userService.createCompanyUser(body);
   }
 
@@ -53,5 +56,12 @@ export class UserController {
     console.log('what you will change: ', body);
     // criaro banco de dados
     return this.userService.updateUser();
+  }
+
+  @Roles(UserType.company)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Post('/job')
+  createJob(@Body() body: any) {
+    return this.userService.createJob(body);
   }
 }

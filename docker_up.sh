@@ -7,3 +7,5 @@ docker-compose down --rmi all
 docker-compose up --build
 
 npm i
+
+npx prisma generate

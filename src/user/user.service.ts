@@ -31,17 +31,22 @@ export class UserService {
     });
   }
 
-  async createHunterUser(body: Prisma.UserCreateInput) {
+  async createHunterUser(
+    body: Prisma.UserUncheckedCreateWithoutMain_user_companyInput,
+  ) {
     return await this.prisma.user.create({
       data: {
         ...body,
         password: await this.hashPassword(body.password),
         type: 'hunter',
+        employee_company_id: null,
       },
     });
   }
 
-  async createCompanyUser(body: Prisma.UserCreateInput) {
+  async createCompanyUser(
+    body: Prisma.UserUncheckedCreateWithoutMain_user_companyInput,
+  ) {
     return await this.prisma.user.create({
       data: {
         ...body,
@@ -78,5 +83,10 @@ export class UserService {
 
   updateUser() {
     return 'updated user';
+  }
+
+  createJob(body: any) {
+    console.log(body);
+    return 'created job';
   }
 }
