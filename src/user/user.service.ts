@@ -81,6 +81,19 @@ export class UserService {
     });
   }
 
+  async getMe(req: any) {
+    return {
+      id: req.user.id,
+      name: req.user.name,
+      type: req.user.type,
+      image: req.user.image ? req.user.image : undefined,
+      email: req.user.email,
+      cell_phone: req.user.cell_phone,
+      created_at: req.user.created_at,
+      employee_company_id: req.user.employee_company_id,
+    };
+  }
+
   updateUser() {
     return 'updated user';
   }

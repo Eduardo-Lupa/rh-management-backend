@@ -6,6 +6,7 @@ import {
   Post,
   Put,
   Query,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
@@ -16,40 +17,46 @@ import {
   CreateUserHunterDTO,
 } from './dtos/createUserInput.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
-import { RolesGuard } from 'src/auth/roles/roles.guard';
 import { Roles } from 'src/decorators/roles.decorator';
 
 @Controller('/user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @UseGuards(AuthGuard) // TODO apenas admin pode acessar
+  @UseGuards(AuthGuard)
+  @Get('/me')
+  getMe(@Req() req: Request) {
+    return this.userService.getMe(req);
+  }
+
+  @Roles(UserType.admin)
+  @UseGuards(AuthGuard)
   @Get()
   findMany(@Body() body: UpdateUserInputDTO) {
     return this.userService.findMany(body);
   }
 
-  @Get('/:id') // TODO apenas admin pode acessar
+  @Roles(UserType.admin)
+  @Get('/:id')
   findUserById(@Param('id') id: number): Promise<User | null> {
     return this.userService.findUserById(id);
   }
 
   // @Roles(UserType.admin)
-  // @UseGuards(AuthGuard, RolesGuard)
-  @Post('/hunter')
+  // @UseGuards(AuthGuard)
+  @Post('/hunter') // TODO apenas admins podem criar usuários
   createHunterUser(@Body() body: CreateUserHunterDTO): Promise<User | null> {
     return this.userService.createHunterUser(body);
   }
 
   // @Roles(UserType.admin)
-  // @UseGuards(AuthGuard, RolesGuard)
+  // @UseGuards(AuthGuard)
   @Post('/company')
   createCompanyUser(@Body() body: CreateUserCompanyDTO): Promise<User | null> {
     return this.userService.createCompanyUser(body);
   }
 
-  @Roles(UserType.hunter)
-  @UseGuards(AuthGuard, RolesGuard)
+  @UseGuards(AuthGuard)
   @Put()
   updateUser(@Body() body: UpdateUserInputDTO, @Query() query: any): string {
     console.log('query: ', query);
@@ -59,7 +66,7 @@ export class UserController {
   }
 
   @Roles(UserType.company)
-  @UseGuards(AuthGuard, RolesGuard)
+  @UseGuards(AuthGuard)
   @Post('/job')
   createJob(@Body() body: any) {
     return this.userService.createJob(body);

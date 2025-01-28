@@ -24,9 +24,10 @@ model User {
   status              Status   @default(ativo)
   employee_company_id Int?
 
-  employee_company Company? @relation(name: "employee", fields: [employee_company_id], references: [id])
-
+  employee_company  Company? @relation(name: "employee", fields: [employee_company_id], references: [id])
   main_user_company Company? @relation(name: "main_user")
+  job              Job[]    @relation(name: "creator_job") // A User can create many jobs
+
   @@map("users")
 }
 
@@ -49,10 +50,28 @@ model Company {
   main_user_id Int      @unique
   status       Status   @default(ativo)
 
-  main_user User     @relation(name: "main_user",fields: [main_user_id], references: [id]) 
+  main_user User   @relation(name: "main_user", fields: [main_user_id], references: [id])
   employees User[] @relation(name: "employee") // A Company can have many employees
+  jobs      Job[]  @relation(name: "company_job") // A Company can have many jobs
 
   @@map("companies")
 }
 
+model Job {
+  id             Int      @id @default(autoincrement())
+  created_at     DateTime @default(now()) @db.Timestamptz(3)
+  title          String
+  description    String
+  initial_salary Float
+  final_salary   Float
+  job_cost_value Float
+  expires_at     DateTime
+  company_id     Int
+  creator_id     Int      // user que criou o job
+  status         Status   @default(ativo)
 
+  company Company @relation(name: "company_job", fields: [company_id], references: [id])
+  creator User    @relation(name: "creator_job", fields: [creator_id], references: [id])
+
+  @@map("jobs")
+}
