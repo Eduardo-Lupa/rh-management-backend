@@ -28,7 +28,6 @@ export class CompanyService {
   }
 
   getJobsCreatedByCompany(req: any) {
-    console.log(req.user);
     return this.prismaService.job.findMany({
       select: {
         id: true,
@@ -39,9 +38,11 @@ export class CompanyService {
         job_cost_value: true,
         expires_at: true,
         created_at: false,
+        status: true,
       },
       where: {
         company_id: req.user.employee_company_id,
+        status: req.query?.status,
       },
     });
   }
