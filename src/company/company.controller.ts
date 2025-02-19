@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Put,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { CompanyService } from './company.service';
 import { Roles } from 'src/decorators/roles.decorator';
 import { UserType } from '@prisma/client';
@@ -25,5 +33,19 @@ export class CompanyController {
   @Get('/jobs')
   getJobsCreatedByCompany(@Req() req: Request) {
     return this.companyService.getJobsCreatedByCompany(req);
+  }
+
+  @Roles(UserType.admin)
+  @UseGuards(AuthGuard)
+  @Get('/jobs/awaiting')
+  getAwaitingJobs() {
+    return this.companyService.getAwaitingJobs();
+  }
+
+  @Roles(UserType.admin)
+  @UseGuards(AuthGuard)
+  @Put('/jobs/:id')
+  updateStatusJob(@Req() req: any) {
+    return this.companyService.updateStatusJob(req);
   }
 }

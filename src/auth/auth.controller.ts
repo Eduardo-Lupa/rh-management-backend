@@ -4,6 +4,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Param,
   Post,
   Req,
   UseGuards,
@@ -29,5 +30,15 @@ export class AuthController {
   @Get('/type')
   userType(@Req() req: any) {
     return this.authService.userType(req);
+  }
+
+  @Post('/forgot-password')
+  forgotPassword(@Body() body: any) {
+    return this.authService.forgotPassword(body);
+  }
+  
+  @Post('/reset-password/:token')
+  async resetPassword(@Param('token') token: string, @Body('password') password: string) {
+    return this.authService.resetPassword(token, password);
   }
 }

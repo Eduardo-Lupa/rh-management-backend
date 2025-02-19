@@ -47,7 +47,43 @@ export class CompanyService {
     });
   }
 
+  getAwaitingJobs() {
+    return this.prismaService.job.findMany({
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        initial_salary: true,
+        final_salary: true,
+        job_cost_value: true,
+        expires_at: true,
+        created_at: false,
+        status: true,
+        company: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+      where: {
+        status: 'awaiting_approval',
+      },
+    });
+  }
+
   updateCompany(id: string) {
     return `Company updated ${id}`;
+  }
+
+  updateStatusJob(req: any) {
+    return this.prismaService.job.update({
+      where: {
+        id: parseInt(req.params.id),
+      },
+      data: {
+        ...req.body,
+      },
+    });
   }
 }
